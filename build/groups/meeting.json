@@ -1,0 +1,5 @@
+{
+  "public": true,
+  "op": [{"username": "__op_username__", "password":"__op_password__"}],
+  "presenter": [{"password":"__user_password__"}]
+}
