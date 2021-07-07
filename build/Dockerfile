@@ -35,6 +35,12 @@ ENV ADMIN_USERNAME="admin"
 ENV ADMIN_PASSWORD=""
 ENV USER_PASSWORD=""
 
+# This variable should point to a URL that will return the external IP of the host machine. This can either be an external
+# service, like ipinfo.io or some internal meta data URL offered by your cloud provider.
+# If this variable is left blank, the turn server will be startet with default settings. Otherwise, the external ip will be
+# used to create the socket.
+ENV EXTERNAL_IP_QUERY_URL=""
+
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 VOLUME /opt/galene/data /opt/galene/groups /opt/galene/recordings
 
