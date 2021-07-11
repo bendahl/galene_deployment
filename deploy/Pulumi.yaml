@@ -1,0 +1,6 @@
+name: galene-deployment
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: Galene video conference server cloud deployment
