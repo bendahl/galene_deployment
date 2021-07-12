@@ -1,4 +1,3 @@
-import asyncio
 import pulumi
 from pulumi.resource import ResourceOptions
 from pulumi_gcp import compute
@@ -31,7 +30,7 @@ firewall = compute.Firewall(
 )
 
 script = f"""#!/bin/bash
-docker run -d --restart always -p 443:8443 -p 1194:1194 -p 1194:1194/udp -e EXTERNAL_IP_QUERY_URL={ip_query_url} -e ADMIN_PASSWORD={admin_password} -p 32000-32100:32000-32100/udp bendahl/galene:master
+docker run -d --restart always -p 443:8443 -p 1194:1194 -p 1194:1194/udp -e EXTERNAL_IP_QUERY_URL={ip_query_url} -e ADMIN_PASSWORD={admin_password} -p 32000-32099:32000-32099/udp bendahl/galene:master
 """
 
 container_instance_addr = compute.address.Address(
