@@ -1,6 +1,5 @@
-from typing import Awaitable
 from pulumi.resource import ComponentResource, ResourceOptions
-from pulumi_gcp import compute
+from pulumi_gcp import *
 
 
 class ServerArgs():
@@ -19,7 +18,7 @@ class GaleneInstance(ComponentResource):
             args: ServerArgs,
             opts: ResourceOptions = None):
         super().__init__("custom:app:GaleneServer", name, {}, opts)
-        
+
         default_net = compute.get_network("default")
 
         firewall = compute.Firewall(

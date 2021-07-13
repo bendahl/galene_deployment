@@ -1,10 +1,6 @@
-import asyncio
-from typing import Awaitable
-import pulumi
 import secrets
-
+import pulumi
 from galeneinstance import GaleneInstance, ServerArgs
-
 
 cfg = pulumi.Config()
 ip_query_url = cfg.get("ip_query_url") or "ipinfo.io/ip"
@@ -15,7 +11,6 @@ instance = GaleneInstance("galene-server",
                               ip_query_url,
                               admin_password
                           ))
-
 
 pulumi.export("container_instance_name", instance.name)
 pulumi.export("container_instance_external_ip", instance.external_ip)
