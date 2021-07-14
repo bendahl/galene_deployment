@@ -1,4 +1,0 @@
-config:
-  gcp:project: galene-automation
-  gcp:region: europe-west1
-  gcp:zone: europe-west1-b

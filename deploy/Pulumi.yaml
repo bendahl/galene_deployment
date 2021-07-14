@@ -4,3 +4,6 @@ runtime:
   options:
     virtualenv: venv
 description: Galene video conference server cloud deployment
+#backend:
+#  url: https://app.pulumi.com/...
+config: stacks

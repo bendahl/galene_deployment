@@ -4,7 +4,7 @@ from galeneinstance import GaleneInstance, ServerArgs
 
 cfg = pulumi.Config()
 ip_query_url = cfg.get("ip_query_url") or "ipinfo.io/ip"
-admin_password = cfg.get("admin_password") or secrets.token_hex(16)
+admin_password = cfg.require_secret("admin_password")
 
 instance = GaleneInstance("galene-server",
                           ServerArgs(
