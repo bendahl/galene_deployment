@@ -1,6 +1,4 @@
 config:
-  galene-deployment:admin_password:
-    secure: AAABAKfUh1EBFfI0EOx2eCmqi3JfxsZQ4HW78gAdLYn0A1PbCg==
   gcp:project: galene-automation
   gcp:region: europe-west1
   gcp:zone: europe-west1-b

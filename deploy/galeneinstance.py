@@ -1,5 +1,4 @@
 from pulumi.resource import ComponentResource, ResourceOptions
-from pulumi import Output
 from pulumi_gcp import *
 
 
@@ -7,9 +6,13 @@ class ServerArgs():
     def __init__(
             self,
             ip_query_url: str,
-            admin_password: Output[str]):
+            admin_password: str,
+            ssl_cert: str,
+            ssl_key: str):
         self.ip_query_url = ip_query_url
         self.admin_password = admin_password
+        self.ssl_cert = ssl_cert
+        self.ssl_key = ssl_key
 
 
 class GaleneInstance(ComponentResource):
@@ -38,11 +41,9 @@ class GaleneInstance(ComponentResource):
             ]
         )
 
-        # Todo: Certs
-        #script = Output.all(args.admin_password).apply(lambda args: f"""#!/bin/bash
-        script = args.admin_password.apply(lambda pw: f"""#!/bin/bash
-        docker run -d --restart always -p 443:8443 -p 1194:1194 -p 1194:1194/udp -e EXTERNAL_IP_QUERY_URL={args.ip_query_url} -e ADMIN_PASSWORD={pw} -p 32000-32099:32000-32099/udp bendahl/galene:master
-        """)
+        script = f"""#!/bin/bash
+        docker run -d --restart always -p 443:8443 -p 1194:1194 -p 1194:1194/udp -e EXTERNAL_IP_QUERY_URL={args.ip_query_url} -e ADMIN_PASSWORD={args.admin_password} -e SSL_CERTIFICATE=\'{args.ssl_cert}\' -e SSL_PRIVATE_KEY=\'{args.ssl_key}\' -p 32000-32099:32000-32099/udp bendahl/galene:master
+        """
 
         container_instance_addr = compute.address.Address(name)
 
