@@ -13,6 +13,20 @@ then
   exit 1
 fi
 
+GALENE_ENV=""
+
+if [ -n "$SSL_CERTIFICATE" ]
+then
+  echo "$SSL_CERTIFICATE" > /opt/galene/data/cert.pem
+fi
+
+if [ -n "$SSL_PRIVATE_KEY" ]
+then
+  echo "$SSL_PRIVATE_KEY" > /opt/galene/data/key.pem
+fi
+
+chown galene:galene /opt/galene/data/*
+
 cp /opt/galene/templates/groups/meeting.json /opt/galene/groups/meeting.json
 sed -i s/__op_username__/"${ADMIN_USERNAME}"/g /opt/galene/groups/meeting.json
 sed -i s/__op_password__/"${ADMIN_PASSWORD}"/g /opt/galene/groups/meeting.json
