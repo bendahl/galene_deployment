@@ -1,0 +1,28 @@
+name: Galene Deployment
+on:
+  workflow_dispatch:
+jobs:
+  up:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Configure GCP Credentials
+        uses: actions-hub/gcloud@master
+        with:
+          args: info
+        env:
+          PROJECT_ID: galene-automation
+          APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+      - run: pip install -r requirements.txt
+      - uses: pulumi/actions@v3
+        with:
+          command: up
+          stack-name: dev
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          ADMIN_PASSWORD: ${{ secrets.GALENE_ADMIN_PASSWORD }}
+          SSL_CERTIFICATE: ${{ secrets.GALENE_SSL_CERTIFICATE }}
+          SSL_PRIVATE_KEY: ${{ secrets.GALENE_SSL_PRIVATE_KEY }}
