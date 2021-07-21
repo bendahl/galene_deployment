@@ -1,4 +1,4 @@
-name: Galene Deployment
+name: Deploy to Cloud
 on:
   workflow_dispatch:
 jobs:

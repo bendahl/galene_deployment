@@ -1,4 +1,4 @@
-name: DESTROY Galene Deployment
+name: Destroy all Resources
 on:
   workflow_dispatch:
 jobs:
