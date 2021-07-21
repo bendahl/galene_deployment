@@ -4,6 +4,9 @@ on:
 jobs:
   up:
     runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: deploy
     steps:
       - uses: actions/checkout@v2
       - uses: google-github-actions/setup-gcloud@master
