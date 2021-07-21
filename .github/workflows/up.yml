@@ -17,7 +17,7 @@ jobs:
       - uses: pulumi/actions@v3
         with:
           work-dir: ./deploy
-          command: preview
+          command: up
           stack-name: dev
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
