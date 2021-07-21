@@ -17,12 +17,12 @@ GALENE_ENV=""
 
 if [ -n "$SSL_CERTIFICATE" ]
 then
-  echo "$SSL_CERTIFICATE" > /opt/galene/data/cert.pem
+  echo "$SSL_CERTIFICATE" | base64 -d  > /opt/galene/data/cert.pem
 fi
 
 if [ -n "$SSL_PRIVATE_KEY" ]
 then
-  echo "$SSL_PRIVATE_KEY" > /opt/galene/data/key.pem
+  echo "$SSL_PRIVATE_KEY" | base64 -d > /opt/galene/data/key.pem
 fi
 
 chown galene:galene /opt/galene/data/*
