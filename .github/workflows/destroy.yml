@@ -2,7 +2,7 @@ name: Destroy all Resources
 on:
   workflow_dispatch:
 jobs:
-  up:
+  destroy:
     runs-on: ubuntu-20.04
     defaults:
       run:
