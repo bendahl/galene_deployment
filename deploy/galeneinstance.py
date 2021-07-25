@@ -1,3 +1,4 @@
+from pulumi import Input, Output
 from pulumi.resource import ComponentResource, ResourceOptions
 from pulumi_gcp import *
 
@@ -38,7 +39,14 @@ class GaleneInstance(ComponentResource):
 
         self.name = container_instance.name
         self.external_ip = container_instance_addr.address
+        self.meeting_url = self.__create_meeting_url(container_instance_addr.address)
         self.register_outputs({})
+
+    @staticmethod
+    def __create_meeting_url(instance_ip: Input[str]) -> Output[str]:
+        return instance_ip.apply(
+            lambda ip: f"https://{ip}/group/meeting"
+        )
 
     @staticmethod
     def create_instance(container_instance_addr, default_net, firewall, name, script, instance_type):

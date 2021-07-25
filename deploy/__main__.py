@@ -6,7 +6,7 @@ from galeneinstance import GaleneInstance, ServerArgs
 cfg = pulumi.Config()
 ip_query_url = cfg.get("ip_query_url") or "ipinfo.io/ip"
 admin_password = os.getenv("ADMIN_PASSWORD")
-max_user = int(os.getenv("MAX_USER")) or 0
+max_user = 10
 ssl_certificate = os.getenv("SSL_CERTIFICATE")
 ssl_private_key = os.getenv("SSL_PRIVATE_KEY")
 
@@ -21,3 +21,4 @@ instance = GaleneInstance("galene-server",
 
 pulumi.export("Container Instance Name", instance.name)
 pulumi.export("External IP", instance.external_ip)
+pulumi.export("Meeting URL", instance.meeting_url)
