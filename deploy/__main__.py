@@ -1,5 +1,4 @@
 import os
-
 import pulumi
 
 from galeneinstance import GaleneInstance, ServerArgs
@@ -20,5 +19,6 @@ instance = GaleneInstance("galene-server",
                               ssl_private_key,
                           ))
 
-pulumi.export("container_instance_name", instance.name)
-pulumi.export("container_instance_external_ip", instance.external_ip)
+pulumi.export("Container Instance Name", instance.name)
+pulumi.export("External IP", instance.external_ip)
+pulumi.export("Meeting URL", f'https://{instance.external_ip}/group/meeting')
