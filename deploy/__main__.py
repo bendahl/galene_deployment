@@ -21,4 +21,4 @@ instance = GaleneInstance("galene-server",
 
 pulumi.export("Container Instance Name", instance.name)
 pulumi.export("External IP", instance.external_ip)
-pulumi.export("Meeting URL", f'https://{instance.external_ip}/group/meeting')
+pulumi.export("Meeting URL", 'https://' + instance.external_ip + '/group/meeting')
