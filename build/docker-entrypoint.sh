@@ -2,6 +2,17 @@
 
 echo "$(date): starting $(cat /opt/galene/version)"
 
+# Decode string if it is base64 encoded
+decode() {
+  echo $1 | base64 -d - 1>/dev/null 2>&1
+  if [ ! $? -eq 0 ]
+  then
+    echo $1
+  else
+    echo $1 | base64 -d -
+  fi
+}
+
 if [ -z "$ADMIN_USERNAME" ]
 then
   ADMIN_USERNAME="admin"
@@ -17,12 +28,12 @@ GALENE_ENV=""
 
 if [ -n "$SSL_CERTIFICATE" ]
 then
-  echo "$SSL_CERTIFICATE"  > /opt/galene/data/cert.pem
+  decode "$SSL_CERTIFICATE"  > /opt/galene/data/cert.pem
 fi
 
 if [ -n "$SSL_PRIVATE_KEY" ]
 then
-  echo "$SSL_PRIVATE_KEY" > /opt/galene/data/key.pem
+  decode "$SSL_PRIVATE_KEY" > /opt/galene/data/key.pem
 fi
 
 chown galene:galene /opt/galene/data/*
