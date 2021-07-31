@@ -2,7 +2,9 @@
 ## Preface
 This document contains information about the installation and usage of the [Galène Server](https://galene.org/) automation. The goal of this document
 is to enable a user of the software to create a working Galène instance in the Google Cloud. It also outlines the process of how 
-to clean up all previously created resources when they are no longer required. This is not an extensive reference manual explaining the 
+to clean up any previously created resources when they are no longer required. 
+
+This is not an extensive reference manual explaining the 
 inner workings of Galène or the tools used as part of the automation solution. Where appropriate, references to third party documentation will be included, however.
 Prior knowledge of cloud software or automation solutions is not required to follow through this document. Some of the processes described here are fairly technical, however,
 and should be read carefully.
@@ -55,20 +57,100 @@ There are three main parts to this document:
 
 ## General Information
 
-Todo: admin user, meeting room, user numbers, instances, SSL, ....
+The Galéne deployment is fully self-contained. Everything needed to run a web meeting is included. There are a few things to note, though.
+
+To keep things simple, a few decisions were made. For one, there is only one admin user that is always called 'admin'. You will have to set
+a password for this user or the deployment will fail. Logging in to the meeting with this account, you will have full control and be able to kick users, etc. All other 
+users can log in using whatever alias they like. A password is **not required** for regular users (even though the password field is always visible on the login screen).
+
+Another measure to keep things simple was the integration of only one single meeting room called "meeting". This solution is not meant to support multiple parallel 
+meetings on a single instance. 
+
+Per meeting you need to choose a number of participants in order to give the deployment a hint on what kind of server to use in terms
+of CPU and memory. A value between 10 and 100 is possible. Entering a lower number will not save you any costs, because 10 users can be supported by the smallest instance 
+currently available with this deployment. More than 100 users are currently out of scope for this solution as well. Theoretically this should be possible, but the 
+current server sizing options are purely based on interpolation of theoretical data and have not yet been backed up by extensive load testing. For this reason, 100
+is a hard coded limit that should work reasonably well. In case you should run into performance issues, it would be interesting to know, however, as this would help to 
+improve the setup.
+
+Last but not least an important topic is SSL. The conference solution only works with secure connections (https) that do require valid SSL certificates. Thankfully,
+Galène is able to generate so called "self-signed certificates". Therefore, you do not need to provide your own. However, note that self-signed certificates will lead
+to browser warnings when connecting to the meeting site. The reason for this is that the identity of your server cannot be verified. The encryption still works, but 
+theoretically someone could be trying to trick the user to connect to a site that's not legitimate. If you would like to avoid such warnings, you may include your own, valid
+certificates. You will then also need to update your domain information to point to your Galène servers' IP address, because SSL certificates are bound to specific domains. The IP
+can easily be obtained from the deployment. It will be presented to you at the end of the deployment process.
 
 ## Web Based Deployment
+The web based deployment is the easiest option as it doesn't require any further setup on your local computer. A few (free) online accounts will be required, however.
 
 ### Prerequisites
+- A [GitHub](https://github.com/) account
+- A [Google (Cloud)](https://cloud.google.com/) account (you may use your regular Google account to sign up to Google Cloud)
+- A [Pulumi](https://www.pulumi.com/) account (_recommendation:_ use your GitHub account to sign up)
 
 ### Step-By-Step Guide
+- Make sure to set up the required accounts first. All three services offer a free tier that you can use. Google Cloud will even
+grant you 300$ to get started. This should get you through a couple of meetings... Below you will find direct links to the
+relevant pages of each service:
 
+  - GitHub: https://github.com/signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F&source=header-home
+  - Google Cloud: https://console.cloud.google.com/freetrial
+  - Pulumi: https://app.pulumi.com/signin?reason=401
+
+- Once you're signed up for the services above, it's time to create a project in Google Cloud. Make sure to set **'galene-automation'** as the project's id. For detailed instructions on
+how to set up a new project in Goolge Cloud, simply refer to the excellent documentation provided [here](https://cloud.google.com/resource-manager/docs/creating-managing-projects#console).
+- Next up, you will need to obtain your own copy of this GitHub repository (a so-called 'fork'). This can easily be accomplished using the GitHub website:
+  - Login to GitHub with your account
+  - Navigate to the galene_deployment project located here: https://github.com/bendahl/galene_deployment
+  - Fork the project to your own space by clicking "fork" in the upper left corner. Detailed instructions on forking can be found [in the relevant GiHub documentation](https://guides.github.com/activities/forking/).
+  - Now that you've got your own copy of the repo, you will need to provide some basic settings for your deployment.
+    - Within your newly forked project, navigate to _"Settings > Secrets > Actions"_.
+    - On this page you will now set up a few basic secrets. You can use the button labeled _"New repository secret"_ to do so.
+    - The following secrets are mandatory for the setup **(make sure to name your secrets exactly like this, including the use of uppercase and underscores)**:
+      - _**GALENE_ADMIN_PASSWORD**:_ The password for the Galène admin user.
+      - _**PROJECT_ID**:_ The Google Project ID (should be 'galene-automation').
+      - _**GCP_KEY**:_ An access key for the service account linked to your GCP project (refer to ["Creating a new service account key"](#Creating-a-new-service-account-key) below for details on how to obtain such a key).
+      - _**PULUMI_ACCESS_TOKEN**:_ This Pulumi access token is needed by the deployment workflow in order to perform actions on your behalf (refer to ["Creating a Pulumi access token"](#Creating-a-Pulumi-access-token) below for details on how to create such a token).
+    - If you would like to use our own SSL certificates along with an existing domain, you will also need to set these secrets (you will need to simply copy and paste the file's contents):
+      - _**GALENE_SSL_CERTIFICATE**:_ The SSL certificate for your domain (make sure that your certificate file contains the full [chain of trust](https://www.ssl.com/faqs/what-is-a-chain-of-trust/)).
+      - _**GALENE_SSL_PRIVATE_KEY**:_ The private key belonging to your certificate.
+      - **Important note: If you decide to use your own certificates, you will also need to set up your domain accordingly and make it point to the IP of your Galène instance. Since this process is 
+      provider specific you will need to refer to your domain provider's reference in order to find out how to update the relevant records.**
+  - At this point your deployment is ready to go. You can now deploy a new Galène instance any time using the "Actions" tab of your GitHub repository. There are two possible actions in total 
+  (details on how to run the actions can be found in the paragraph ["Running GitHub actions for Galène"](#Running-GitHub-actions-for-Galène):
+    - _**Deploy to cloud:**_ This action will deploy a new Galène server instance in Google Cloud for you. 
+    - _**Destroy all Resources:**_ This action will destroy all previously created resources within Google Cloud. **Make sure to run this when you don't need the conferencing server anymore in order to avoid unnecessary costs.**
+
+#### Running GitHub actions for Galène
+
+#### Creating a new service account key
+
+#### Creating a Pulumi access token
 
 ## Deployment from Local Machine
-Note that the local installation will require the use of a shell (or, in other words, console) environment. If you're not familiar
+Note that the local installation will require the use of a shell. If you're not familiar
 using such environments, please refer to the web based installation instead. Also, the following setup was tested on Linux.
 The shell available on MacOS should behave similarly, but deviations are possible. Using Windows is also possible, but was not
-tested either.
+tested either. If you're using a recent version of Windows 10, using the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/about) 
+should work out of the box and provide the most consistent environment. 
+
+Additional information: If you're planning on using your own SSL certificates with this form of deployment, make sure to check how to base64-encode 
+your certificates using your platform's tools. On Linux and MacOSX this should be fairly straight forward using the base64 command line tool. 
+
+Example commands (assuming that you're in a shell and 'my-cert.pem' is the name of your certificate file):
+
+- Printing the contents of the file as a base64 encoded string:
+ 
+`cat my-cert.pem | base64 -`
+
+- Saving the above string to a file called 'my-cert.b64' instead of printing to screen:
+ 
+`cat my-cert.pem | base64 - > my-cert.b64`
+
+- Setting the environment variable 'SSL_CERT' to the base64 encoded string above:
+ 
+`export SSL_CERT=$(cat my-cert.pem | base64 -)`
+
 
 ### Prerequisites
 The following software will need to be installed on your local machine:
@@ -99,17 +181,23 @@ either use a graphical Git frontend to do so, or simply use a shell and enter `g
   if you've configured an SSH key on GitHub, you may use `git@github.com:bendahl/galene_deployment.git`.
 - Navigate to the now locally available `galene_deployment` directory.
 - Within the project main directory navigate to the subdirectory `deploy`.
-- If you haven't yet opened a shell, it's now time to open a shell within the current directory.
+- If you haven't yet opened a shell, it's now time to do so within the current directory.
 - Make sure to set the following environment variables:
-  - _ADMIN_PASSWORD:_ The password for the Galène admin user.
-  - _MAX_USER:_  Maximum number of users. Default: 10. This should not exceed 100. The number is used to decide which instance size is needed 
+  - _**ADMIN_PASSWORD**:_ The password for the Galène admin user.
+  - _**MAX_USER**:_  Maximum number of users. Default: 10. The value should not exceed 100. The number is used to decide which instance size is needed 
     (more users = more hardware = higher costs). A number less than 10 does not make sense, as it doesn't affect the sizing decision.
+  - If you would like to use your own domain and SSL certificates, set up the additional variables mentioned below and make sure to update your DNS information accordingly once 
+    the server has been deployed (**note that the content should be base64 encoded to ensure that the values will be forwarded correctly**):
+    - _**SSL_CERTIFICATE**:_ The SSL certificate for your domain (make sure that your certificate file contains the full [chain of trust](https://www.ssl.com/faqs/what-is-a-chain-of-trust/)).
+    - _**SSL_PRIVATE_KEY**:_ The private key belonging to your certificate
 - To deploy Galène to Google Cloud enter `pulumi up`. A short summary outlining the planned changes will appear. Confirm this dialog by 
   selecting "yes" to go through with the deployment.
 - After a short while the deployment should be complete and you will be presented with some basic information such as:
-    - _Container Instance Name:_ The name of your server within Google Cloud.
-    - _External IP:_ The address at which your server may be contacted from the outside (via Browser, etc...)
-    - _Meeting URL:_ This is the link to your online meeting room. Use this to enter the meeting. Make sure to send this link to all participants.
+    - _**Container Instance Name:**_ The name of your server within Google Cloud.
+    - _**External IP:**_ The address at which your server may be contacted from the outside (via Browser, etc...)
+    - _**Meeting URL:**_ This is the link to your online meeting room. Use this to enter the meeting. Make sure to send this link to all participants. **If you're using your own domain, 
+    make sure to update the relevant DNS entry to match the exernal IP. You should also replace the IP in your meeting URL with your domain name before sending out invitations. 
+    The process of updating your DNS entry is not documented here, because different providers handle this differently.**
 
 #### Cleaning Up
 When you don't need the meeting room anymore, you should clean up all resources running in the Cloud to reduce cost. To do so, follow these steps:
