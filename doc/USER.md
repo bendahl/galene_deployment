@@ -10,7 +10,7 @@ Prior knowledge of cloud software or automation solutions is not required to fol
 and should be read carefully.
 
 ## Terminology
-The following list contains a few keywords that are used throughout the document in order to prevent confusion.
+The following list explains some basic terms that are used throughout the text.
 
 - _Automation Solution / IaC Tool_
   
@@ -121,11 +121,111 @@ how to set up a new project in Goolge Cloud, simply refer to the excellent docum
     - _**Deploy to cloud:**_ This action will deploy a new Galène server instance in Google Cloud for you. 
     - _**Destroy all Resources:**_ This action will destroy all previously created resources within Google Cloud. **Make sure to run this when you don't need the conferencing server anymore in order to avoid unnecessary costs.**
 
-#### Running GitHub actions for Galène
 
-#### Creating a new service account key
 
-#### Creating a Pulumi access token
+### Running GitHub actions for Galène
+Once you've forked the repository, GitHub should automatically pick up the two actions specified in the directory ".github/workflows". 
+They both need to be run manually from the "Actions" tab in your repository. 
+
+To **deploy** the Galène server to Google Cloud, follow these steps:
+- Navigate to the "Actions" tab of the galene_deployment repository (your fork of it).
+- Just underneath "All Actions" you should see two actions as shown in the following picture:
+
+![](img/actions_all.png)
+
+- Click on "Deploy to cloud"
+- Click the button "Run Workflow" in the middle right as shown below and choose how many participants will attend the meeting (min: 10, max: 100):
+
+![](img/actions_start_deploy.png)
+
+- Click on the green button on the popup screen that is labeled "Run Workflow".
+- The deployment will start. The deployment process will take a bit (typically around 1.5 minutes).
+- Once the deployment is done, the icon on the list item will change to a green check. 
+- There are various ways to view the meeting URL for your instance. The most convenient one is to simply use the Pulumi web interface.
+- Log in to Pulumi and click on "Projects > dev" like shown below:
+
+![](img/pulumi_projects.png)
+
+- Within the "Stack" view you will now see an "Outputs" sections that contains all relevant information about your deployment, including the meeting URL.
+
+![](img/pulumi_outputs.png)
+
+- Click on the meeting link to open the meeting (and make sure to send this link to the meeting participants).
+- That's it! The deployment is done. 
+* __If you're using your own domain, make sure to update it to match the IP provided in the Outputs and replace the IP
+in the meeting URL with your domain.__
+
+  
+In order to **shut down** the Galène instance on Google cloud, simply use the "Destroy all Resources" action. The procedure is similar
+to the deployment procedure. All you have to do is run the workflow, like before. The only difference is that it is not necessary to
+set any parameters for this to work. For the sake of completeness, the basic steps are described below:
+
+- Select the "Destroy all Resources" action by clicking on it.
+
+![](img/actions_all_destroy.png)
+
+
+- Click on "Run Workflow" and then again on the green "Run Workflow" button in the popup window.
+
+![](img/actions_start_destroy.png)
+
+- Wait for the workflow to finish running. This may take a bit.
+
+![](img/actions_destroy_success.png)
+
+- Upon success, there should be a new workflow run with a green check in the action run list
+  (to double-check, you can also take a look at the Pulumi web interface - the Outputs section should be gone
+and you will see that "Destroy succeeded in x minutes").
+
+![](img/plumi_destroy_success.png)
+
+
+### Creating a new service account key
+You will need a so called "Service Account Key" for your Google Cloud project in order to access it programmatically 
+(that's what Pulumi is doing in the background). To do so, follow these steps:
+
+- Log in to Google Cloud and go to the "console".
+- Click on the hamburger menu (the white stripes) in the upper left corner of the menu bar.
+
+![](img/gcloud_menu_service_account.png)
+
+- Select your default service account that's connected to your current project.
+
+![](img/gcloud_default_svc_account.png)
+
+- On the following page, select the "Keys" tab and then "Add keys".
+
+![](img/gcloud_svc_account_keys.png)
+
+- Make sure to select "json" as the key format. **IMPORTANT: Once you hit "Create" you will be presented with the options to 
+either download or open the key file. Make sure to safely store the contents of the file. You will only be able to
+access it once.**
+
+![](img/gcloud_json_key.png)
+
+- The service account key can now be used as a secret. Simply copy and paste the complete contents of the file to the __GCP_KEY__ secret
+of your repository.
+
+### Creating a Pulumi access token
+Similarly to Google Cloud, you will need a token in order to access Pulumi from your GitHub action. Follow these 
+steps to create one:
+
+- Log in to your Pulumi account
+- Click on "Settings > Access Tokens > Create Token"
+
+![](img/pulumi_access_token_creation.png)
+
+- Enter a description for your token (this can be anything) and hit "Create token".
+
+![](img/pulumi_token_description.png)
+
+- The token will now be shown to you **exactly once**. Make sure to make a copy of the value 
+(simply click on the "copy" symbol, as highlighted in the screenshot). You can use this value as the contents of your
+__PULUMI_ACCESS_TOKEN__ secret in the GitHub repository.
+
+![](img/pulumi_access_token.png)
+
+- All done! You now have everything you need to access Pulumi from your GitHub actions.
 
 ## Deployment from Local Machine
 Note that the local installation will require the use of a shell. If you're not familiar
