@@ -93,15 +93,15 @@ The web based deployment is the easiest option as it doesn't require any further
 grant you 300$ to get started. This should get you through a couple of meetings... Below you will find direct links to the
 relevant pages of each service:
 
-  - GitHub: https://github.com/signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F&source=header-home
-  - Google Cloud: https://console.cloud.google.com/freetrial
-  - Pulumi: https://app.pulumi.com/signin?reason=401
+  - GitHub: [https://github.com/signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F&source=header-home](https://github.com/signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F&source=header-home)
+  - Google Cloud: [https://console.cloud.google.com/freetrial](https://console.cloud.google.com/freetrial)
+  - Pulumi: [https://app.pulumi.com/signin?reason=401](https://app.pulumi.com/signin?reason=401)
 
 - Once you're signed up for the services above, it's time to create a project in Google Cloud. Make sure to set **'galene-automation'** as the project's id. For detailed instructions on
 how to set up a new project in Goolge Cloud, simply refer to the excellent documentation provided [here](https://cloud.google.com/resource-manager/docs/creating-managing-projects#console).
 - Next up, you will need to obtain your own copy of this GitHub repository (a so-called 'fork'). This can easily be accomplished using the GitHub website:
   - Login to GitHub with your account
-  - Navigate to the galene_deployment project located here: https://github.com/bendahl/galene_deployment
+  - Navigate to the galene_deployment project located here: [https://github.com/bendahl/galene_deployment](https://github.com/bendahl/galene_deployment)
   - Fork the project to your own space by clicking "fork" in the upper left corner. Detailed instructions on forking can be found [in the relevant GiHub documentation](https://guides.github.com/activities/forking/).
   - Now that you've got your own copy of the repo, you will need to provide some basic settings for your deployment.
     - Within your newly forked project, navigate to _"Settings > Secrets > Actions"_.
