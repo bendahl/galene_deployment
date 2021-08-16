@@ -21,7 +21,7 @@ The following list explains some basic terms that are used throughout the text.
 
 - _Deployment_
 
-    A deployment refers to a software or a bundle of components that are installed on some remote location (in this case
+    A deployment refers to a software or a bundle of components that are installed in some remote location (in this case
     the Galène Server and its components).
   
   
