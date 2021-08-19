@@ -147,7 +147,7 @@ class GaleneInstance(ComponentResource):
         if 80 < max_user <= 100:
             return "n2-highcpu-32"
 
-        raise InvalidInstanceSizeException(f"{max_user} is out of range. Typical group sizes are between 20 and 100 "
+        raise InvalidInstanceSizeException(f"{max_user} is out of range. Valid group sizes are between 2 and 100 "
                                            f"users.")
 
 
