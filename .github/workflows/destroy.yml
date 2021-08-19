@@ -21,6 +21,3 @@ jobs:
           stack-name: dev
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-          ADMIN_PASSWORD: ${{ secrets.GALENE_ADMIN_PASSWORD }}
-          SSL_CERTIFICATE: ${{ secrets.GALENE_SSL_CERTIFICATE }}
-          SSL_PRIVATE_KEY: ${{ secrets.GALENE_SSL_PRIVATE_KEY }}
