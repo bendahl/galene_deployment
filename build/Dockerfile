@@ -47,8 +47,8 @@ VOLUME /opt/galene/data /opt/galene/groups /opt/galene/recordings
 EXPOSE 8443
 EXPOSE 1194
 EXPOSE 1194/udp
-# May not make sense, depending on how flexible the setup will be... (currently, max of 100 users)
-EXPOSE 32000-32099/udp
+# May not make sense, depending on how flexible the setup will be... (currently, max of 80 users)
+EXPOSE 32000-32079/udp
 
 WORKDIR /opt/galene
 COPY --from=builder /opt/galene/galene .

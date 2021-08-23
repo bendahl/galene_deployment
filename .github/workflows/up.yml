@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       numuser:
-        description: 'Number of participants (max 100)'
+        description: 'Number of participants (min: 2; max: 80)'
         required: true
         default: '10'
 jobs:

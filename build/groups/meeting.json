@@ -3,6 +3,6 @@
   "description": "Online Meeting - Click the link to join the meeting.",
   "op": [{"username": "__op_username__", "password":"__op_password__"}],
   "presenter": [{"password":"__user_password__"}],
-  "max-clients": 100,
+  "max-clients": 80,
   "allow-recording": false
 }

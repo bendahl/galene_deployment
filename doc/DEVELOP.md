@@ -37,7 +37,7 @@ simply [set the build argument](https://docs.docker.com/engine/reference/command
 
 The image can be run using this command (omit the "--rm" if you would like to persist the container):
 
-`docker run --rm -p 8443:8443 -p 1194:1194 -p 1194:1194/udp -e ADMIN_PASSWORD=admin -p 32000-32100:32000-32100/udp galene:master`
+`docker run --rm -p 8443:8443 -p 1194:1194 -p 1194:1194/udp -e ADMIN_PASSWORD=admin -p 32000-32079:32000-32079/udp galene:master`
 
 
 ### Vagrant
@@ -51,7 +51,7 @@ settings of the cloud instance (the format used to describe the ports is the sam
   - 1194:1194 (TURN)
 - UDP:
   - 1194 (TURN)
-  - 32000-32100:32000-32100 (media streams)
+  - 32000-32079:32000-32079 (media streams)
 
 You may, of course use the Vagrant box as a development environment as well. In that case, you may also want to preinstall the required
 prerequisites upon first boot. You can do that by either extending the currently used inline bash provisioning script within 
@@ -70,7 +70,7 @@ to the group will also have to be supported by the image and possibly the Pulumi
 _Example:_
 
 
-If you would like to support more than 100 users, you will need to make changes in the following places:
+If you would like to support more than 80 users, you will need to make changes in the following places:
 
 - `build/groups/meeting.json` -> set "max-clients" to a value that suits your needs
 - `build/docker-entrypoint.sh` -> adjust the port range for the media streams

@@ -46,7 +46,7 @@ class GaleneInstance(ComponentResource):
         default_net = compute.get_network("default")
         firewall = self.create_firewall(default_net)
         script = f"""#!/bin/bash
-        docker run -d --restart always -p 443:8443 -p 1194:1194 -p 1194:1194/udp -e EXTERNAL_IP_QUERY_URL={args.ip_query_url} -e ADMIN_PASSWORD={args.admin_password} -e SSL_CERTIFICATE=\'{args.ssl_cert}\' -e SSL_PRIVATE_KEY=\'{args.ssl_key}\' -p 32000-32099:32000-32099/udp bendahl/galene:master
+        docker run -d --restart always -p 443:8443 -p 1194:1194 -p 1194:1194/udp -e EXTERNAL_IP_QUERY_URL={args.ip_query_url} -e ADMIN_PASSWORD={args.admin_password} -e SSL_CERTIFICATE=\'{args.ssl_cert}\' -e SSL_PRIVATE_KEY=\'{args.ssl_key}\' -p 32000-32079:32000-32079/udp bendahl/galene:master
         """
 
         container_instance_addr = compute.address.Address(name)
@@ -124,7 +124,7 @@ class GaleneInstance(ComponentResource):
                 ),
                 compute.FirewallAllowArgs(
                     protocol="udp",
-                    ports=["1194", "32000-32099"]
+                    ports=["1194", "32000-32079"]
                 ),
             ]
         )
@@ -138,14 +138,12 @@ class GaleneInstance(ComponentResource):
 
         :param max_user: maximum number of users (values have to be in the closed interval [2, 100])
         :return: instance type name"""
-        if 1 < max_user < 30:
+        if 1 < max_user <= 20:
             return "n2-highcpu-2"
-        if 30 <= max_user <= 40:
+        if 20 < max_user <= 40:
             return "n2-highcpu-4"
         if 40 < max_user <= 80:
             return "n2-highcpu-16"
-        if 80 < max_user <= 100:
-            return "n2-highcpu-32"
 
         raise InvalidInstanceSizeException(f"{max_user} is out of range. Valid group sizes are between 2 and 100 "
                                            f"users.")

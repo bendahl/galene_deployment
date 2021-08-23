@@ -5,7 +5,7 @@ is to enable a user of the software to create a working Galène instance in the 
 to clean up any previously created resources when they are no longer required. 
 
 This is not an extensive reference manual explaining the 
-inner workings of Galène or the tools used as part of the automation solution. Where appropriate, references to third party documentation will be included, however.
+inner workings of Galène or the tools used as part of the automation solution. Where appropriate, references to third party documentation will be included.
 Prior knowledge of cloud software or automation solutions is not required to follow through this document. Some of the processes described here are fairly technical, however,
 and should be read carefully.
 
@@ -67,10 +67,10 @@ Another measure to keep things simple was the integration of only one single mee
 meetings on a single instance. 
 
 Per meeting you need to choose a number of participants in order to give the deployment a hint on what kind of server to use in terms
-of CPU and memory. A value between 10 and 100 is possible. Entering a lower number will not save you any costs, because 10 users can be supported by the smallest instance 
-currently available with this deployment. More than 100 users are currently out of scope for this solution as well. Theoretically this should be possible, but the 
-current server sizing options are purely based on interpolation of theoretical data and have not yet been backed up by extensive load testing. For this reason, 100
-is a hard coded limit that should work reasonably well. In case you should run into performance issues, it would be interesting to know, however, as this would help to 
+of CPU and memory. A value between 2 and 80 is possible. Entering a lower number will not save you any costs, because 10 users can be supported by the smallest instance 
+currently available with this deployment. More than 80 users are currently out of scope for this solution as well. Theoretically this should be possible, but the 
+current server sizing options are purely based on interpolation of theoretical data and have not yet been backed up by extensive load testing. For this reason, 80
+is a hard coded limit that should work reasonably well. In case you should run into performance issues, it would be interesting to know, as this would help to 
 improve the setup.
 
 Last but not least an important topic is SSL. The conference solution only works with secure connections (https) that do require valid SSL certificates. Thankfully,
@@ -81,7 +81,7 @@ certificates. You will then also need to update your domain information to point
 can easily be obtained from the deployment. It will be presented to you at the end of the deployment process.
 
 ## Web Based Deployment
-The web based deployment is the easiest option as it doesn't require any further setup on your local computer. A few (free) online accounts will be required, however.
+The web based deployment is the easiest option as it doesn't require any further setup on your local computer. Just a few (free) online accounts will be required.
 
 ### Prerequisites
 - A [GitHub](https://github.com/) account
@@ -134,7 +134,7 @@ To **deploy** the Galène server to Google Cloud, follow these steps:
 ![](img/actions_all.png)
 
 - Click on "Deploy to cloud"
-- Click the button "Run Workflow" in the middle right as shown below and choose how many participants will attend the meeting (min: 10, max: 100):
+- Click the button "Run Workflow" in the middle right as shown below and choose how many participants will attend the meeting (min: 2, max: 80):
 
 ![](img/actions_start_deploy.png)
 
@@ -284,7 +284,7 @@ either use a graphical Git frontend to do so, or simply use a shell and enter `g
 - If you haven't yet opened a shell, it's now time to do so within the current directory.
 - Make sure to set the following environment variables:
   - _**ADMIN_PASSWORD**:_ The password for the Galène admin user.
-  - _**MAX_USER**:_  Maximum number of users. Default: 10. The value should not exceed 100. The number is used to decide which instance size is needed 
+  - _**MAX_USER**:_  Maximum number of users. Default: 10. The value should not exceed 80. The number is used to decide which instance size is needed 
     (more users = more hardware = higher costs). A number less than 10 does not make sense, as it doesn't affect the sizing decision.
   - If you would like to use your own domain and SSL certificates, set up the additional variables mentioned below and make sure to update your DNS information accordingly once 
     the server has been deployed (**note that the content should be base64 encoded to ensure that the values will be forwarded correctly**):

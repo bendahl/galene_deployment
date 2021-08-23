@@ -50,9 +50,9 @@ chown galene:galene recordings
 if [ -z "$EXTERNAL_IP_QUERY_URL" ]
 then
   echo "Starting galene with default turn settings (0.0.0.0:1194). Note that your video stream may not work without properly setting the external IP address."
-  exec su galene -c "ulimit -n 65536 && ./galene -http :8443 -udp-range 32000-32099"
+  exec su galene -c "ulimit -n 65536 && ./galene -http :8443 -udp-range 32000-32079"
 else
   EXTERNAL_IP=$(wget -q -O - $EXTERNAL_IP_QUERY_URL)
   echo "Starting galene with turn set to $EXTERNAL_IP:1194"
-  exec su galene -c "ulimit -n 65536 && ./galene -http :8443 -udp-range 32000-32099 -turn $EXTERNAL_IP:1194"
+  exec su galene -c "ulimit -n 65536 && ./galene -http :8443 -udp-range 32000-32079 -turn $EXTERNAL_IP:1194"
 fi
