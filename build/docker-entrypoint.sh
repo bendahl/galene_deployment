@@ -4,12 +4,11 @@ echo "$(date): starting $(cat /opt/galene/version)"
 
 # Decode string if it is base64 encoded
 decode() {
-  echo $1 | base64 -d - 1>/dev/null 2>&1
-  if [ ! $? -eq 0 ]
+  if [ ! $(echo "$1" | grep BEGIN | wc -l) -eq 0 ]
   then
-    echo $1
+    echo "$1"
   else
-    echo $1 | base64 -d -
+    echo "$1" | base64 -d -
   fi
 }
 
