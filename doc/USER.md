@@ -61,7 +61,8 @@ The Galéne deployment is fully self-contained. Everything needed to run a web m
 
 To keep things simple, a few decisions were made. For one, there is only one admin user that is always called 'admin'. You will have to set
 a password for this user or the deployment will fail. Logging in to the meeting with this account, you will have full control and be able to kick users, etc. All other 
-users can log in using whatever alias they like. A password is **not required** for regular users (even though the password field is always visible on the login screen).
+users can log in using whatever alias they like. A password **may be required** for regular users (depending on the meeting settings). 
+In case that it is required, the same password will apply for any username.
 
 Another measure to keep things simple was the integration of only one single meeting room called "meeting". This solution is not meant to support multiple parallel 
 meetings on a single instance. 
@@ -111,6 +112,8 @@ how to set up a new project in Goolge Cloud, simply refer to the excellent docum
       - _**PROJECT_ID**:_ The Google Project ID (should be 'galene-automation').
       - _**GCP_KEY**:_ An access key for the service account linked to your GCP project (refer to ["Creating a new service account key"](#Creating-a-new-service-account-key) below for details on how to obtain such a key).
       - _**PULUMI_ACCESS_TOKEN**:_ This Pulumi access token is needed by the deployment workflow in order to perform actions on your behalf (refer to ["Creating a Pulumi access token"](#Creating-a-Pulumi-access-token) below for details on how to create such a token).
+    - If you wish to secure your meeting with a password, you may set a user password that will apply to all non-admin users.
+      - _**GALENE_USER_PASSWORD**:_ The password for the all other users.
     - If you would like to use our own SSL certificates along with an existing domain, you will also need to set these secrets (you will need to simply copy and paste the file's contents):
       - _**GALENE_SSL_CERTIFICATE**:_ The SSL certificate for your domain (make sure that your certificate file contains the full [chain of trust](https://www.ssl.com/faqs/what-is-a-chain-of-trust/)).
       - _**GALENE_SSL_PRIVATE_KEY**:_ The private key belonging to your certificate.
@@ -286,6 +289,9 @@ either use a graphical Git frontend to do so, or simply use a shell and enter `g
   - _**ADMIN_PASSWORD**:_ The password for the Galène admin user.
   - _**MAX_USER**:_  Maximum number of users. Default: 10. The value should not exceed 80. The number is used to decide which instance size is needed 
     (more users = more hardware = higher costs). A number less than 10 does not make sense, as it doesn't affect the sizing decision.
+  - If you wish to secure your meeting with a password, you may set a user password that will apply to all non-admin users.
+    - _**USER_PASSWORD**:_ The password for the all other users.
+
   - If you would like to use your own domain and SSL certificates, set up the additional variables mentioned below and make sure to update your DNS information accordingly once 
     the server has been deployed (**note that the content should be base64 encoded to ensure that the values will be forwarded correctly**):
     - _**SSL_CERTIFICATE**:_ The SSL certificate for your domain (make sure that your certificate file contains the full [chain of trust](https://www.ssl.com/faqs/what-is-a-chain-of-trust/)).
@@ -296,7 +302,7 @@ either use a graphical Git frontend to do so, or simply use a shell and enter `g
     - _**Container Instance Name:**_ The name of your server within Google Cloud.
     - _**External IP:**_ The address at which your server may be contacted from the outside (via Browser, etc...)
     - _**Meeting URL:**_ This is the link to your online meeting room. Use this to enter the meeting. Make sure to send this link to all participants. **If you're using your own domain, 
-    make sure to update the relevant DNS entry to match the exernal IP. You should also replace the IP in your meeting URL with your domain name before sending out invitations. 
+    make sure to update the relevant DNS entry to match the external IP. You should also replace the IP in your meeting URL with your domain name before sending out invitations. 
     The process of updating your DNS entry is not documented here, because different providers handle this differently.**
 
 #### Cleaning Up

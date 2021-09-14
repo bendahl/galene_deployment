@@ -10,18 +10,21 @@ class ServerArgs():
     def __init__(
             self,
             admin_password: str,
+            user_password: str,
             max_user: int,
             ip_query_url: str,
             ssl_cert: str,
             ssl_key: str):
         """
         :param admin_password: password of the admin user of the meeting
+        :param user_password: password used for all other users of the meeting
         :param max_user: maximum number of participants for a meeting
         :param ip_query_url: url by which the external ip of the instance can be requested
         :param ssl_cert: SSL certificate used by the meeting. If left empty, a certificate will be generated.
         :param ssl_key: the SSL key that belongs to the given certificate (only needs to be set when a certificate is explicitly set as well)
         """
         self.admin_password = admin_password
+        self.user_password = user_password
         self.max_user = max_user
         self.ip_query_url = ip_query_url
         self.ssl_cert = ssl_cert
@@ -46,7 +49,7 @@ class GaleneInstance(ComponentResource):
         default_net = compute.get_network("default")
         firewall = self.create_firewall(default_net)
         script = f"""#!/bin/bash
-        docker run -d --restart always -p 443:8443 -p 1194:1194 -p 1194:1194/udp -e EXTERNAL_IP_QUERY_URL={args.ip_query_url} -e ADMIN_PASSWORD={args.admin_password} -e SSL_CERTIFICATE=\'{args.ssl_cert}\' -e SSL_PRIVATE_KEY=\'{args.ssl_key}\' -p 32000-32079:32000-32079/udp bendahl/galene:master
+        docker run -d --restart always -p 443:8443 -p 1194:1194 -p 1194:1194/udp -e EXTERNAL_IP_QUERY_URL=\'{args.ip_query_url}\' -e ADMIN_PASSWORD=\'{args.admin_password}\' -e USER_PASSWORD=\'{args.user_password}\' -e SSL_CERTIFICATE=\'{args.ssl_cert}\' -e SSL_PRIVATE_KEY=\'{args.ssl_key}\' -p 32000-32079:32000-32079/udp bendahl/galene:master
         """
 
         container_instance_addr = compute.address.Address(name)
